@@ -1,6 +1,6 @@
-# Bienvenido a OpenBooks 📖
+# Bienvenido a Festividad3.0 📖
 ---
-OpenBooks es un smart contract que parte de la idea de que todo el conocimiento y la información debe ser libre para todos. Este proyecto permite a los usuarios publicar documentos, libros, etc. en un ambiente completamente descentralizado y así permitir a otros usuarios obtener los recursos facilmente sin tener que visitar cientos de páginas diferentes hasta conseguir el recurso que buscaban.
+Festividad3.0 es un smart contract que parte de la idea de que todo el conocimiento y la información debe ser libre para todos. Este proyecto permite a los usuarios publicar documentos, libros, etc. en un ambiente completamente descentralizado y así permitir a otros usuarios obtener los recursos facilmente sin tener que visitar cientos de páginas diferentes hasta conseguir el recurso que buscaban.
 Las funcionalidades principales del contrato son las siguientes:
 * Subir un libro (además, guarda el usuario de la persona que lo sube como "Contribuyente").
 * Obtener todos los libros.
@@ -24,7 +24,7 @@ Ya tenemos todo lo que necesitamos para probar nuestro contrato inteligente. Aho
 
 ## Instalación 📖🐱‍💻
 ---
-1. Clone el repositorio ```git clone git@github.com:sebasvivas1/OpenBooks.git && cd OpenBooks```
+1. Clone el repositorio ```git clone git@github.com:SistemasTecTlaxiaco/Festividad3.0.git && cd Festividad3.0```
 2. Vamos a iniciar sesión en nuestra wallet que creamos anteriormente: ```near login```
 3. Dentro del repositorio, instalemos las dependencias del proyecto ejecutando ```npm install```, tranquilo, esto puede tomar unos segundos.
 4. Si quieres desplegar el contrato y probar sus funciones, puedes hacerlo con ```yarn deploy:dev``` esto le devolverá un conjunto de caracteres que empezarán por "dev-" seguido por numeros generados por la red. Guárdelo, lo necesitará si quiere probar los métodos del contrato inteligente.
@@ -63,8 +63,10 @@ Algunos de los metodos que podemos ejecutar son los siguientes
     ```
 
 ## Mockup de Figma 🎨📖
-Abre este [enlace](https://www.figma.com/file/3NKKf6JKrRXON8Q7yoFX1N/OpenBooks?node-id=0%3A1) para abrir la propuesta de diseño de la Dapp.
+Abre este [enlace](https://www.figma.com/file/igXRt1ov7MJHXFu9RBHe1N/Festividad3.0?node-id=0%3A1&t=rEsimWWMbVPX3Lo2-0) para abrir la propuesta de diseño de la Dapp.
 
 ## Authors
-- [Sebastian Vivas](https://github.com/sebasvivas1)
-- [Jose Alfredo Roman Cruz](https://github.com/josealfredo79)
+- [José Antonio Balbuena Cruz](https://github.com/JoseABCruz)
+- [Heidi Bautista Sanjuan](https://github.com/Heidi-19)
+- [Sandra Gabriela Velazco Guzman](https://github.com/Sandra)
+- [Federico Victoriano Sierra](https://github.com/FedericoVS)
