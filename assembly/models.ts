@@ -33,4 +33,3 @@ export class Contributor {
 export const allBooks = new PersistentVector<Book>("v")
 export const allContributors = new PersistentVector<Contributor>("c")
 export const ONE_NEAR = u128.from('10000000000000000')
-
