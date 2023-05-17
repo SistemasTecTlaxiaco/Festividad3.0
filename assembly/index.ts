@@ -1,162 +1,164 @@
 import { context, logging, ContractPromiseBatch, u128 } from 'near-sdk-as';
-import { Book, allBooks, Contributor, allContributors, ONE_NEAR } from './models'
+import { Evento, allEvento, Usuarios, allUsuarios, ONE_NEAR } from './models'
 
 const contractOwner = context.sender;
-const allBooksIndex = allBooks.length;
-const allContributorsIndex = allContributors.length;
+const allEventoIndex = allEvento.length;
+const allUsuariosIndex = allUsuarios.length;
 
-// Creates a new instance of a book and stores it on a PersistentVector
-export function uploadBook(name: string, description: string, image: string, file: string, author: string, language: string, publisher: string): Book {
-    const newBookUpload = new Book(name, description, image, file, author, language, publisher);
-    allBooks.push(newBookUpload);
-    logging.log('Nuevo libro publicado: ' + newBookUpload.name)
-    addContributor();
-    return newBookUpload;
+export function Registrar_Evento(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Proveedor: string, Reservacion: string): Evento {
+    const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Proveedor, Reservacion);
+    allEvento.push(nuevoEvento);
+    logging.log('Nuevo evento registrado: ' + nuevoEvento.Nombre);
+    return nuevoEvento;
 }
-
-// Returns all books on the PersistentVector
-export function getBooks(): Book[] {
-    const data = new Array<Book>(allBooksIndex);
-    for(let i = 0; i < allBooksIndex; i++) {
-        data[i] = allBooks[i]
+/*
+export function Eliminar_Evento(id_evento: i32): void {
+    for (let i = 0; i < allEvento.length; i++) {
+        if (allEvento[i].id_evento == id_evento) {
+            allEvento.splice(i, 1);
+            break;
+        }
     }
-    return data;
+    logging.log('Evento eliminado');
 }
 
-// Returns a single book (if exists)
-export function getBook(bookIndex: i32): Book {
-    if(allBooks.length < bookIndex) {
-        logging.log('Book doesnt exist')
+export function Actualizar_Evento(id_evento: i32, Nombre: string, Descripcion: string, Precio: f64, Fecha: u64, Hora: u64, Proveedor: string, Reservacion: i32): Evento {
+    for (let i = 0; i < allEvento.length; i++) {
+        if (allEvento[i].id_evento == id_evento) {
+            allEvento[i].Nombre = Nombre;
+            allEvento[i].Descripcion = Descripcion;
+            allEvento[i].Precio = Precio;
+            allEvento[i].Fecha = Fecha;
+            allEvento[i].Hora = Hora;
+            allEvento[i].Proveedor = Proveedor;
+            allEvento[i].Reservacion = Reservacion;
+            logging.log('Evento actualizado');
+            return allEvento[i];
+        }
     }
-    return allBooks[bookIndex]
+    logging.log('Evento no encontrado');
 }
 
-// Used to validate testing for deleteBooks function
-export function booksLen(): number {
-    return allBooks.length;
+export function Buscar_Evento(Nombre: string, Descripcion: string, Precio: f64, Fecha: u64): Evento[] {
+    const eventosEncontrados = new Array<Evento>();
+    for (let i = 0; i < allEvento.length; i++) {
+        if (allEvento[i].Nombre == Nombre && allEvento[i].Descripcion == Descripcion && allEvento[i].Precio == Precio && allEvento[i].Fecha == Fecha) {
+            eventosEncontrados.push(allEvento[i]);
+        }
+    }
+    return eventosEncontrados;
 }
 
-// Empties the PersistentVector in charge of storing all books
-export function deleteBooks(): void {
-    while(allBooks.length > 0) {
-        allBooks.pop();
+export function Autorizacion_Evento(id_evento: i32, nombre: string): void {
+    for (let i = 0; i < allEvento.length; i++) {
+        if (allEvento[i].id_evento == id_evento && allEvento[i].Nombre == nombre) {
+            const batch = ContractPromiseBatch.create(allEvento[i].Proveedor);
+            batch.addPromise(context.attachedDeposit >= allEvento[i].Precio,
+                'El monto enviado debe ser mayor o igual al precio del evento');
+            batch.addPromise(context.sender == allEvento[i].Proveedor,
+                'Solo el proveedor del evento puede autorizar reservaciones');
+            const promesa = batch.then(context.contractName).function_call('Reservar_Evento', { "id_evento": id_evento, "nombre": nombre }, 0, u128.Zero);
+            promesa.returnAsResult();
+            break;
+        }
     }
 }
 
-// Deletes a book (if exists) based on its position on the Book PersistentVector
-export function deleteBook(bookIndex: i32): bool {
-    if(allBooks.length < bookIndex) {
-        logging.log('This book doesnt exist')
-        return false
+export function Cancelar_Evento(id_evento: i32): void {
+    const evento = allEvento.find(e => e.id_evento == id_evento);
+    if (!evento) {
+        logging.log('Evento no encontrado');
+        return;
     }
-    allBooks.swap_remove(bookIndex);
-    logging.log('The book has been deleted!');
-    return true
+    evento.Reservacion = 0;
+    logging.log(`El evento ${evento.Nombre} ha sido cancelado`);
 }
 
-// Lets a user change the ownership of a book in case its required
-export function changeBookOwner(bookIndex: i32): bool {
-    if(allBooks.length < bookIndex) {
-         logging.log('This book doesnt exist!')
-         return false;
-    } else if(allBooks[bookIndex].owner == context.sender) {
-            logging.log('This user already owns this book.')
+export function Identificar_Evento(nombre: string, descripcion: string): Evento | null {
+    const evento = allEvento.find(e => e.Nombre == nombre && e.Descripcion == descripcion);
+    if (!evento) {
+        logging.log('Evento no encontrado');
+        return null;
+    }
+    logging.log(`El evento ${evento.Nombre} ha sido identificado`);
+    return evento;
+}
+
+export function Calendarizacion_Evento(Fecha: u64, Precio: f64, Hora: u64, Reservacion: i32, Proveedor: string): Evento[] {
+    const eventos = allEvento.filter(e => e.Fecha == Fecha && e.Precio == Precio && e.Hora == Hora && e.Reservacion == Reservacion && e.Proveedor == Proveedor);
+    if (eventos.length == 0) {
+        logging.log('No hay eventos en esa fecha, hora y precio');
+        return eventos;
+    }
+    logging.log(`Se han encontrado ${eventos.length} eventos para la fecha ${Fecha}, hora ${Hora}, precio ${Precio}, reserva ${Reservacion} y proveedor ${Proveedor}`);
+    return eventos;
+}
+
+export function Pago_Evento(Precio: f64): void {
+    const accountBalance = context.accountBalance;
+    if (accountBalance < Precio) {
+        logging.log(`El usuario ${context.sender} no tiene suficientes fondos para pagar el evento`);
+        return;
+    }
+    logging.log(`El usuario ${context.sender} ha pagado ${Precio} NEAR por el evento`);
+}
+
+export function Registrar_Usuario(id_usuario: i32, Nombre: string, ApellidoPa: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: u64): Usuarios {
+    const nuevoUsuario = new Usuarios(id_usuario, Nombre, ApellidoPa, ApellidoMat, Telefono, Direccion, Correo, Proveedor, Cliente, Sexo, FechaNac);
+    allUsuarios.push(nuevoUsuario);
+    logging.log(`Nuevo usuario registrado: ${nuevoUsuario.Nombre} ${nuevoUsuario.ApellidoPa}`);
+    return nuevoUsuario;
+}
+
+export function Eliminar_Usuario(id_usuario: i32): void {
+    const usuarioIndex = allUsuarios.findIndex(u => u.id_usuario == id_usuario);
+    if (usuarioIndex == -1) {
+        logging.log('Usuario no encontrado');
+        return;
+    }
+    allUsuarios.splice(usuarioIndex, 1);
+    logging.log(`El usuario con id ${id_usuario} ha sido eliminado`);
+}
+
+export function Actualizar_Usuario(id_usuario: i32, Nombre: string, ApellidoPa: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: string): Usuarios {
+    const usuario = allUsuarios.find(u => u.id_usuario == id_usuario);
+    if (!usuario) {
+        logging.log(`El usuario con ID ${id_usuario} no existe`);
+        return null;
+    }
+    usuario.Nombre = Nombre;
+    usuario.ApellidoPa = ApellidoPa;
+    usuario.ApellidoMat = ApellidoMat;
+    usuario.Telefono = Telefono;
+    usuario.Direccion = Direccion;
+    usuario.Correo = Correo;
+    usuario.Proveedor = Proveedor;
+    usuario.Cliente = Cliente;
+    usuario.Sexo = Sexo;
+    usuario.FechaNac = FechaNac;
+    logging.log(`El usuario con ID ${id_usuario} ha sido actualizado`);
+    return usuario;
+}
+
+export function Buscar_Usuario(Nombre: string, ApellidoPa: string, ApellidoMat: string): Usuarios[] {
+    return allUsuarios.filter(u => {
+        if (Nombre && !u.Nombre.toLowerCase().includes(Nombre.toLowerCase())) {
             return false;
         }
-    else {
-        allBooks[bookIndex].owner = context.sender;
-        logging.log('Book ownership swap!')
+        if (ApellidoPa && !u.ApellidoPa.toLowerCase().includes(ApellidoPa.toLowerCase())) {
+            return false;
+        }
+        if (ApellidoMat && !u.ApellidoMat.toLowerCase().includes(ApellidoMat.toLowerCase())) {
+            return false;
+        }
         return true;
-    }
+    });
 }
 
-// Returns the owner of the contract
-export function getOwner(): string {
-    return contractOwner;
+export function Verificar_Usuario(Wallet: string): Usuarios {
+    return allUsuarios.find(u => u.Wallet == Wallet);
 }
 
-// Returns all the contributors
-export function getContributors(): Contributor[] {
-    const data = new Array<Contributor>(allContributorsIndex);
-    for(let i = 0; i < allContributorsIndex; i++) {
-        data[i] = allContributors[i]
-    }
-    return data;
-}
-
-// Used to test deleteContributors function
-export function getContributorsLength(): number {
-    return allContributors.length;
-}
-
-// Adds a new contributor to the allContributors PersistentVector
-export function addContributor(): Contributor {
-    const data = new Array<Contributor>(allContributorsIndex) 
-    let exists = false;
-     const contributor = new Contributor()
-    for(let i = 0; i < allContributorsIndex; i++) {
-        data[i] = allContributors[i];
-    }
-    for(let x = 0; x < data.length; x++) {
-        if(context.sender == data[x].user) {
-             logging.log('This user is already a contributor!')
-             exists = true;
-            break
-        }
-    }
-    if(exists == false) {
-        logging.log('User is not a contributor, adding him now!')
-        allContributors.push(contributor)
-        return contributor
-    }
-    return contributor
-}
-
-// Checks if a contributor exists based on its username, making it easier for the user to check
-export function findContributor(contributorUser: String):bool {
-    const data = new Array<Contributor>(allContributorsIndex);
-    if(allContributorsIndex <= 0) {
-        logging.log("Theres no contributors right now")
-        return false;
-    } else {
-        for(let i = 0; i < allContributorsIndex; i++) {
-            data[i] = allContributors[i]
-            if(data[i].user == contributorUser) {
-                logging.log('Contributor ' + contributorUser + ' was found!')
-                return true
-            }
-            break
-        }
-        logging.log('This contributor doesnt exist.')
-        return false;
-    }
-}
-
-// Empties the allContributors PersistentVector
-export function deleteContributors(): void {
-    while(allContributors.length > 0) {
-        allContributors.pop()
-    }
-    logging.log(
-        'Se ha vaciado la lista de contributors'
-    )
-}
-
-// Lets the user make a donation to the book owner
-export function makeDonation(bookOwnerIndex: i32): bool {
-    const data = new  Array<Book>(allBooksIndex);
-    if(bookOwnerIndex > allBooksIndex) {
-        logging.log('El libro/owner no existe.')
-        return false
-    } else {
-         assert(context.attachedDeposit > ONE_NEAR, 'Monto a donar'); 
-        return true
-
-    }
-   }
-
-// Lets the user make a donation to the project
-export function donateToProject(): void {
-    assert(context.attachedDeposit > ONE_NEAR, 'You need to deposit some NEAR.')
-    logging.log('Gracias por su contribucion')
-}
+export function Identificar_Usuario(Proveedor: boolean, Cliente: boolean): Usuarios[] {
+    return allUsuarios.filter(u => u.Proveedor == Proveedor && u.Cliente == Cliente);
+}*/
