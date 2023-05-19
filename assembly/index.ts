@@ -11,16 +11,31 @@ export function Registrar_Evento(id_evento: string, Nombre: string, Descripcion:
     logging.log('Nuevo evento registrado: ' + nuevoEvento.Nombre);
     return nuevoEvento;
 }
-/*
-export function Eliminar_Evento(id_evento: i32): void {
+
+export function Buscar_Evento(Nombre: string): Evento[] {
+    const eventosEncontrados = new Array<Evento>();
     for (let i = 0; i < allEvento.length; i++) {
-        if (allEvento[i].id_evento == id_evento) {
-            allEvento.splice(i, 1);
-            break;
+        if (allEvento[i].Nombre == Nombre) {
+            eventosEncontrados.push(allEvento[i]);
         }
     }
-    logging.log('Evento eliminado');
+    return eventosEncontrados;
 }
+/*
+export function Eliminar_Evento(id_evento: string): bool {
+    if(allEvento.length < convertStringToI32(id_evento)) {
+        logging.log('El evento no existe')
+        return false
+    }
+    allEvento.swap_remove(parseInt(id_evento));
+    logging.log('Evento eliminado');
+    return true
+    
+    
+}
+*/
+/*
+
 
 export function Actualizar_Evento(id_evento: i32, Nombre: string, Descripcion: string, Precio: f64, Fecha: u64, Hora: u64, Proveedor: string, Reservacion: i32): Evento {
     for (let i = 0; i < allEvento.length; i++) {
@@ -39,15 +54,7 @@ export function Actualizar_Evento(id_evento: i32, Nombre: string, Descripcion: s
     logging.log('Evento no encontrado');
 }
 
-export function Buscar_Evento(Nombre: string, Descripcion: string, Precio: f64, Fecha: u64): Evento[] {
-    const eventosEncontrados = new Array<Evento>();
-    for (let i = 0; i < allEvento.length; i++) {
-        if (allEvento[i].Nombre == Nombre && allEvento[i].Descripcion == Descripcion && allEvento[i].Precio == Precio && allEvento[i].Fecha == Fecha) {
-            eventosEncontrados.push(allEvento[i]);
-        }
-    }
-    return eventosEncontrados;
-}
+
 
 export function Autorizacion_Evento(id_evento: i32, nombre: string): void {
     for (let i = 0; i < allEvento.length; i++) {
