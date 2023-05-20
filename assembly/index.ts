@@ -1,4 +1,4 @@
-import { context, logging, ContractPromiseBatch, u128 } from 'near-sdk-as';
+import { context, logging, storage, ContractPromiseBatch, u128 } from 'near-sdk-as';
 import { Evento, allEvento, Usuarios, allUsuarios, ONE_NEAR } from './models'
 
 const contractOwner = context.sender;
@@ -21,38 +21,41 @@ export function Buscar_Evento(Nombre: string): Evento[] {
     }
     return eventosEncontrados;
 }
-/*
-export function Eliminar_Evento(id_evento: string): bool {
-    if(allEvento.length < convertStringToI32(id_evento)) {
-        logging.log('El evento no existe')
-        return false
+
+
+  export function Actualizar_Evento(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Proveedor: string, Reservacion: string): Evento | null {
+    for (let i = 0; i < allEvento.length; i++) {
+      if (allEvento[i].id_evento == id_evento) {
+        allEvento.swap_remove(i);
+        const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Proveedor, Reservacion);
+        allEvento.push(nuevoEvento);
+        logging.log('Evento actualizado: ' + allEvento[i].Nombre);
+        return allEvento[i];
+      }
     }
-    allEvento.swap_remove(parseInt(id_evento));
-    logging.log('Evento eliminado');
-    return true
-    
-    
-}
+    logging.log('Evento no encontrado');
+    return null;
+  }
+
+
+  export function Eliminar_Evento(id_evento: string): boolean {
+    for (let i = 0; i < allEvento.length; i++) {
+      if (allEvento[i].id_evento == id_evento) {
+        allEvento.swap_remove(i);
+        logging.log('Evento eliminado');
+        return true;
+      }
+    }
+    logging.log('El evento no existe');
+    return false;
+  }
+/*
+
 */
 /*
 
 
-export function Actualizar_Evento(id_evento: i32, Nombre: string, Descripcion: string, Precio: f64, Fecha: u64, Hora: u64, Proveedor: string, Reservacion: i32): Evento {
-    for (let i = 0; i < allEvento.length; i++) {
-        if (allEvento[i].id_evento == id_evento) {
-            allEvento[i].Nombre = Nombre;
-            allEvento[i].Descripcion = Descripcion;
-            allEvento[i].Precio = Precio;
-            allEvento[i].Fecha = Fecha;
-            allEvento[i].Hora = Hora;
-            allEvento[i].Proveedor = Proveedor;
-            allEvento[i].Reservacion = Reservacion;
-            logging.log('Evento actualizado');
-            return allEvento[i];
-        }
-    }
-    logging.log('Evento no encontrado');
-}
+
 
 
 

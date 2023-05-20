@@ -59,6 +59,8 @@ export class Usuarios {
   }
 }
 
-export const allEvento = new PersistentVector<Evento>("v")
-export const allUsuarios = new PersistentVector<Usuarios>("c")
+//export const allEvento = new PersistentVector<Evento>("v")
+//export const allUsuarios = new PersistentVector<Usuarios>("c")
+export const allEvento = new PersistentVector<Evento>('eventos');
+export const allUsuarios = new PersistentVector<Usuarios>('usuarios');
 export const ONE_NEAR = u128.from('10000000000000000')
