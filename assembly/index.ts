@@ -81,6 +81,20 @@ export function Buscar_Usuario(Nombre: string): Usuarios[] {
 }
 
 
+
+export function Eliminar_Usuario(Nombre: string): boolean {
+    for (let i = 0; i < allUsuarios.length; i++) {
+      if (allUsuarios[i].Nombre == Nombre) {
+        allUsuarios.swap_remove(i);
+        logging.log('Usuario eliminado');
+        return true;
+      }
+    }
+    logging.log('El Usuario no existe');
+    return false;
+  }
+
+
 /*
   export function addProveedors(): Proveedors {
     const data = new Array<Proveedors>(allProveedorsIndex) 
