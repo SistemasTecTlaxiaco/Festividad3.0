@@ -116,9 +116,21 @@ export function Eliminar_Usuario(Nombre: string): boolean {
         logging.log('El Usuario no existe');
         return false;
       }
-      
-  
 
+      export function Cancelar_Evento(id_evento:string ): boolean {
+        for (let i = 0; i < allEvento.length; i++) {
+          if (allEvento[i].id_evento == id_evento) {
+              allEvento.swap_remove(i)
+            // Realizar la lógica de cancelación del evento aquí
+            // ...
+      
+            logging.log('Evento cancelado');
+            return true;
+          }
+        }
+        logging.log('El evento no existe');
+        return false;
+      }
 
 /*
   export function addProveedors(): Proveedors {
