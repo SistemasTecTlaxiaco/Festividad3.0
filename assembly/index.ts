@@ -1,14 +1,20 @@
 import { context, logging, storage, ContractPromiseBatch, u128 } from 'near-sdk-as';
-import { Evento, allEvento, Usuarios, allUsuarios, ONE_NEAR } from './models'
+import { Evento, allEvento, Usuarios, allUsuarios/*, Proveedors, allProveedors, Clients, allClients*/, ONE_NEAR } from './models'
 
 const contractOwner = context.sender;
 const allEventoIndex = allEvento.length;
 const allUsuariosIndex = allUsuarios.length;
+/*const allProveedorsIndex = allProveedors.length;
+const allClientsIndex = allClients.length;*/
 
-export function Registrar_Evento(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Proveedor: string, Reservacion: string): Evento {
-    const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Proveedor, Reservacion);
+export function Registrar_Evento(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Reservacion: string): Evento {
+    const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Reservacion);
     allEvento.push(nuevoEvento);
     logging.log('Nuevo evento registrado: ' + nuevoEvento.Nombre);
+    /*if (Proveedor == "True"){
+        addProveedors();
+    }*/
+    
     return nuevoEvento;
 }
 
@@ -23,11 +29,11 @@ export function Buscar_Evento(Nombre: string): Evento[] {
 }
 
 
-  export function Actualizar_Evento(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Proveedor: string, Reservacion: string): Evento | null {
+  export function Actualizar_Evento(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Reservacion: string): Evento | null {
     for (let i = 0; i < allEvento.length; i++) {
       if (allEvento[i].id_evento == id_evento) {
         allEvento.swap_remove(i);
-        const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Proveedor, Reservacion);
+        const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Reservacion);
         allEvento.push(nuevoEvento);
         logging.log('Evento actualizado: ' + allEvento[i].Nombre);
         return allEvento[i];
@@ -49,16 +55,94 @@ export function Buscar_Evento(Nombre: string): Evento[] {
     logging.log('El evento no existe');
     return false;
   }
-/*
 
+  export function Registrar_Usuario(Nombre: string, ApellidoPat: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, RedesS: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: string, Wallet: string): Usuarios {
+    const nuevoUsuario = new Usuarios(Nombre, ApellidoPat, ApellidoMat, Telefono, Direccion, Correo, RedesS, Proveedor, Cliente, Sexo, FechaNac, Wallet);
+    allUsuarios.push(nuevoUsuario);
+    logging.log('Nuevo usuario registrado: ' + nuevoUsuario.Nombre +' '+nuevoUsuario.ApellidoPat);
+    /*if (Proveedor == true){
+        addProveedors();
+    }
+    if (Cliente == true){
+        addClients();
+    }*/
+    
+    return nuevoUsuario;
+}
+
+export function Buscar_Usuario(Nombre: string): Usuarios[] {
+    const usuariosEncontrados = new Array<Usuarios>();
+    for (let i = 0; i < allUsuarios.length; i++) {
+        if (allUsuarios[i].Nombre == Nombre) {
+            usuariosEncontrados.push(allUsuarios[i]);
+        }
+    }
+    return usuariosEncontrados;
+}
+
+
+/*
+  export function addProveedors(): Proveedors {
+    const data = new Array<Proveedors>(allProveedorsIndex) 
+    let exists = false;
+     const Proveedor = new Proveedors()
+    for(let i = 0; i < allProveedorsIndex; i++) {
+        data[i] = allProveedors[i];
+    }
+    for(let x = 0; x < data.length; x++) {
+        if(context.sender == data[x].Nombre) {
+             logging.log('Este Usuario Proveedor ya existe!')
+             exists = true;
+            break
+        }
+    }
+    if(exists == false) {
+        logging.log('Este Usuario Proveedor no existe, añadiendo ahora!')
+        allProveedors.push(Proveedor)
+        return Proveedor
+    }
+    return Proveedor
+}
+
+
+export function addClients(): Clients {
+    const data = new Array<Clients>(allClientsIndex) 
+    let exists = false;
+     const Cliente = new Clients()
+    for(let i = 0; i < allClientsIndex; i++) {
+        data[i] = allClients[i];
+    }
+    for(let x = 0; x < data.length; x++) {
+        if(context.sender == data[x].Nombre) {
+             logging.log('Este Usuario Proveedor ya existe!')
+             exists = true;
+            break
+        }
+    }
+    if(exists == false) {
+        logging.log('Este Usuario Proveedor no existe, añadiendo ahora!')
+        allClients.push(Cliente)
+        return Cliente
+    }
+    return Cliente
+}
+
+export function getProveedors(): Proveedors[] {
+    const data = new Array<Proveedors>(allProveedorsIndex);
+    for(let i = 0; i < allProveedorsIndex; i++) {
+        data[i] = allProveedors[i]
+    }
+    return data;
+}
+
+
+export function getProveedorsLength(): number {
+    return allProveedors.length;
+}
 */
+
+
 /*
-
-
-
-
-
-
 export function Autorizacion_Evento(id_evento: i32, nombre: string): void {
     for (let i = 0; i < allEvento.length; i++) {
         if (allEvento[i].id_evento == id_evento && allEvento[i].Nombre == nombre) {
@@ -113,12 +197,7 @@ export function Pago_Evento(Precio: f64): void {
     logging.log(`El usuario ${context.sender} ha pagado ${Precio} NEAR por el evento`);
 }
 
-export function Registrar_Usuario(id_usuario: i32, Nombre: string, ApellidoPa: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: u64): Usuarios {
-    const nuevoUsuario = new Usuarios(id_usuario, Nombre, ApellidoPa, ApellidoMat, Telefono, Direccion, Correo, Proveedor, Cliente, Sexo, FechaNac);
-    allUsuarios.push(nuevoUsuario);
-    logging.log(`Nuevo usuario registrado: ${nuevoUsuario.Nombre} ${nuevoUsuario.ApellidoPa}`);
-    return nuevoUsuario;
-}
+
 
 export function Eliminar_Usuario(id_usuario: i32): void {
     const usuarioIndex = allUsuarios.findIndex(u => u.id_usuario == id_usuario);
@@ -150,6 +229,35 @@ export function Actualizar_Usuario(id_usuario: i32, Nombre: string, ApellidoPa: 
     return usuario;
 }
 
+
+
+export function Verificar_Usuario(Wallet: string): Usuarios {
+    return allUsuarios.find(u => u.Wallet == Wallet);
+}
+
+export function Identificar_Usuario(Proveedor: boolean, Cliente: boolean): Usuarios[] {
+    return allUsuarios.filter(u => u.Proveedor == Proveedor && u.Cliente == Cliente);
+}*/
+
+
+
+
+
+/*
+export function Registrar_Usuario(id_usuario: i32, Nombre: string, ApellidoPa: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: u64): Usuarios {
+    const nuevoUsuario = new Usuarios(id_usuario, Nombre, ApellidoPa, ApellidoMat, Telefono, Direccion, Correo, Proveedor, Cliente, Sexo, FechaNac);
+    allUsuarios.push(nuevoUsuario);
+    logging.log(`Nuevo usuario registrado: ${nuevoUsuario.Nombre} ${nuevoUsuario.ApellidoPa}`);
+    return nuevoUsuario;
+
+    const nuevoEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Proveedor, Reservacion);
+    allEvento.push(nuevoEvento);
+    logging.log('Nuevo evento registrado: ' + nuevoEvento.Nombre);
+    return nuevoEvento;
+}
+
+
+
 export function Buscar_Usuario(Nombre: string, ApellidoPa: string, ApellidoMat: string): Usuarios[] {
     return allUsuarios.filter(u => {
         if (Nombre && !u.Nombre.toLowerCase().includes(Nombre.toLowerCase())) {
@@ -164,11 +272,4 @@ export function Buscar_Usuario(Nombre: string, ApellidoPa: string, ApellidoMat: 
         return true;
     });
 }
-
-export function Verificar_Usuario(Wallet: string): Usuarios {
-    return allUsuarios.find(u => u.Wallet == Wallet);
-}
-
-export function Identificar_Usuario(Proveedor: boolean, Cliente: boolean): Usuarios[] {
-    return allUsuarios.filter(u => u.Proveedor == Proveedor && u.Cliente == Cliente);
-}*/
+*/

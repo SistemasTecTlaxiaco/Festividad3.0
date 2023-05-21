@@ -13,17 +13,17 @@ export class Evento {
   Precio: string;
   Fecha: string;
   Hora: string;
-  Proveedor: string;
+  //Proveedor: string;
   Reservacion: string;
 
-  constructor(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, Proveedor: string, Reservacion: string) {
+  constructor(id_evento: string, Nombre: string, Descripcion: string, Precio: string, Fecha: string, Hora: string, /*Proveedor: string,*/ Reservacion: string) {
     this.id_evento = id_evento;
     this.Nombre = Nombre;
     this.Descripcion = Descripcion;
     this.Precio = Precio;
     this.Fecha = Fecha;
     this.Hora = Hora;
-    this.Proveedor = Proveedor;
+    //this.Proveedor = Proveedor;
     this.Reservacion = Reservacion;
   }
 }
@@ -55,12 +55,31 @@ export class Usuarios {
     this.Cliente = Cliente;
     this.Sexo = Sexo;
     this.FechaNac = FechaNac;
-    this.Wallet = Wallet;
+    this.Wallet = context.sender;
   }
 }
+
+/*
+@nearBindgen
+export class Proveedors {
+    Nombre: string;
+    constructor() {
+        this.Nombre = context.sender;
+    }
+}
+
+@nearBindgen
+export class Clients {
+    Nombre: string;
+    constructor() {
+        this.Nombre = context.sender;
+    }
+}*/
 
 //export const allEvento = new PersistentVector<Evento>("v")
 //export const allUsuarios = new PersistentVector<Usuarios>("c")
 export const allEvento = new PersistentVector<Evento>('eventos');
 export const allUsuarios = new PersistentVector<Usuarios>('usuarios');
+//export const allProveedors = new PersistentVector<Proveedors>("proveedores")
+//export const allClients = new PersistentVector<Clients>("clientes")
 export const ONE_NEAR = u128.from('10000000000000000')
