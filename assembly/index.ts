@@ -54,7 +54,7 @@ export function Buscar_Evento(Nombre: string): Evento[] {
     }
     logging.log('El evento no existe');
     return false;
-  }
+}
 
   export function Registrar_Usuario(Nombre: string, ApellidoPat: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, RedesS: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: string, Wallet: string): Usuarios {
     const nuevoUsuario = new Usuarios(Nombre, ApellidoPat, ApellidoMat, Telefono, Direccion, Correo, RedesS, Proveedor, Cliente, Sexo, FechaNac, Wallet);
@@ -105,6 +105,19 @@ export function Eliminar_Usuario(Nombre: string): boolean {
     logging.log('El Usuario no existe');
     return false;
   }
+
+  export function Identificar_Usuario (Nombre: string): boolean {
+        for (let i = 0; i < allUsuarios.length; i++) {
+          if (allUsuarios[i].Nombre === Nombre) {
+            logging.log('Usuario identificado');
+            return true;
+          }
+        }
+        logging.log('El Usuario no existe');
+        return false;
+      }
+      
+  
 
 
 /*
