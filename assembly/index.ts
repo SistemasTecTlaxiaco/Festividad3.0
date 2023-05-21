@@ -80,7 +80,19 @@ export function Buscar_Usuario(Nombre: string): Usuarios[] {
     return usuariosEncontrados;
 }
 
-
+export function Actualizar_Usuario(Nombre: string, ApellidoPat: string, ApellidoMat: string, Telefono: string, Direccion: string, Correo: string, RedesS: string, Proveedor: boolean, Cliente: boolean, Sexo: string, FechaNac: string, Wallet: string): Usuarios | null{
+    for (let i = 0; i < allUsuarios.length; i++) {
+        if (allUsuarios[i].Nombre == Nombre) {
+            allUsuarios.swap_remove(i);
+          const nuevoUsuario = new Usuarios(Nombre, ApellidoPat, ApellidoMat, Telefono, Direccion, Correo, RedesS, Proveedor, Cliente, Sexo, FechaNac, Wallet);
+          allUsuarios.push(nuevoUsuario);
+          logging.log('Usuario actualizado: ' + allUsuarios[i].Nombre);
+          return allUsuarios[i];
+        }
+      }
+      logging.log('Usuario no encontrado');
+      return null;
+}
 
 export function Eliminar_Usuario(Nombre: string): boolean {
     for (let i = 0; i < allUsuarios.length; i++) {
