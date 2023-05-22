@@ -47,6 +47,7 @@ export function Actualizar_Evento(id_evento: string, Nombre: string, Descripcion
     return null;
 }
 
+//near call dev-1684359389069-58099080863311 Buscar_Evento '{"Nombre": "Concierto"}' --accountId joseantonio1.testnet
 export function Buscar_Evento(Nombre: string): Evento[] {
     const eventosEncontrados = new Array<Evento>();
     for (let i = 0; i < allEvento.length; i++) {
