@@ -1,10 +1,6 @@
 
 import { context, PersistentVector, u128 } from "near-sdk-as";
 
-//   i32 == int
-//   f64 == float
-//   u64 == dateTime
-
 @nearBindgen
 export class Evento {
   id_evento: string;
@@ -59,6 +55,17 @@ export class Usuarios {
   }
 }
 
+
+//export const allEvento = new PersistentVector<Evento>("v")
+//export const allUsuarios = new PersistentVector<Usuarios>("c")
+export const allEvento = new PersistentVector<Evento>('eventos');
+export const allUsuarios = new PersistentVector<Usuarios>('usuarios');
+//export const allProveedors = new PersistentVector<Proveedors>("proveedores")
+//export const allClients = new PersistentVector<Clients>("clientes")
+export const ONE_NEAR = u128.from('10000000000000000')
+
+
+
 /*
 @nearBindgen
 export class Proveedors {
@@ -75,11 +82,3 @@ export class Clients {
         this.Nombre = context.sender;
     }
 }*/
-
-//export const allEvento = new PersistentVector<Evento>("v")
-//export const allUsuarios = new PersistentVector<Usuarios>("c")
-export const allEvento = new PersistentVector<Evento>('eventos');
-export const allUsuarios = new PersistentVector<Usuarios>('usuarios');
-//export const allProveedors = new PersistentVector<Proveedors>("proveedores")
-//export const allClients = new PersistentVector<Clients>("clientes")
-export const ONE_NEAR = u128.from('10000000000000000')
