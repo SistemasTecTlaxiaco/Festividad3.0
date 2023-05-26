@@ -90,6 +90,19 @@ export function Cancelar_Evento(id_evento: string): boolean {
     return false;
 }
 
+//near call dev-1684702987833-96600875699732 Identificar_Evento '{"Nombre":"Fiesta de XV"}' --accountId sandra1009testnet.testnet
+export function Identificar_Evento(Nombre: string): boolean {
+    for (let i = 0; i < allEvento.length; i++) {
+        if (allEvento[i].Nombre === Nombre) {
+            logging.log('Evento identificado');
+            return true;
+        }
+    }
+    logging.log('El evento no existe');
+    return false;
+}
+
+
 /*export function Identificar_Evento(nombre: string, descripcion: string): Evento | null {
   const evento = allEvento.find(e => e.Nombre == nombre && e.Descripcion == descripcion);
   if (!evento) {
