@@ -202,6 +202,19 @@ export function Identificar_Usuario(Nombre: string): boolean {
     return false;
 }
 
+/*export function Verificar_Usuario(Nombre: string,ApellidoPat: string,ApellidoMat: String): boolean {
+    for (let i = 0; i < allUsuarios.length; i++) {
+        const verificar = new Array<Usuarios>();
+        for (let i = 0; i < allUsuarios.length; i++) {
+            if (allUsuarios[i].Nombre == Nombre) {
+                verificar.push(allUsuarios[i]);
+            }
+        }
+        return verificar;
+        }
+        logging.log('Verificación fallida');
+    }*/
+    
 
 
 /*
