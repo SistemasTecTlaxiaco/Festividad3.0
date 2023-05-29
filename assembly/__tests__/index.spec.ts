@@ -1,40 +1,40 @@
-import {Book, allBooks, allContributors, Contributor} from "../models3"
-import { getBooks, uploadBook, deleteBooks, booksLen, getContributors, findContributor, deleteContributors, getContributorsLength, deleteBook } from "../index3";
-import { context, Context, logging } from "near-sdk-as";
+import { context, logging, storage, ContractPromiseBatch, u128 } from 'near-sdk-as';
+import { Registrar_Evento} from "..";
+import { Evento, allEvento, Usuarios, allUsuarios/*, Proveedors, allProveedors, Clients, allClients*/, ONE_NEAR } from '../models'
 
 
-const name = 'Rust Learning Book'
-const description = 'Book written for all those people interested in learning the powerfull and reliable Rust Programming Language.'
-const image ='https://ipfs.io/ipfs/bafybeiet7srgvvxkzwrcaayorzmecmirkizmbinwwcn2k7wxpaszvfmzdi'
-const file = 'https://ipfs.io/ipfs/bafybeia5khhhukn672acm6sfredqdereor7n7zsoobvrwcqk7rmn6ihffi'
-const author = 'Book Author'
-const publisher = 'Book Publisher'
-const language = 'English'
-
-const contributorUser = 'Bob'
+const id_evento = '1';
+const Nombre = 'Concierto';
+const Descripcion = 'Concierto de Rock Pesado.';
+const Precio = '100';
+const Fecha = '20/05/2023';
+const Hora = '04:20';
+const Reservacion = '50';
 
 
-let newBook = new Book(name, description, image, file, author, language, publisher);
 
-const allBooksIndex = allBooks.length;
-const allContributorsIndex = allContributors.length;
 
-const contsData = new Array<Contributor>(allContributorsIndex);
-for(let x = 0; x < allContributorsIndex; x++) {
-    contsData[x] = allContributors[x]
+let newEvento = new Evento(id_evento, Nombre, Descripcion, Precio, Fecha, Hora, Reservacion);
+
+const allEventoIndex = allEvento.length;
+const allUsuariosIndex = allUsuarios.length;
+
+const contsData = new Array<Usuarios>(allUsuariosIndex);
+for(let x = 0; x < allUsuariosIndex; x++) {
+    contsData[x] = allUsuarios[x]
 }
 
-const data = new Array<Book>(allBooksIndex);
-for(let i=0; i < allBooksIndex; i++) {
-    data[i] = allBooks[i]
+const data = new Array<Evento>(allEventoIndex);
+for(let i=0; i < allEventoIndex; i++) {
+    data[i] = allEvento[i]
 }
 
-describe("uploadBook", () => {
-    it('should return "newBookUpload"', () => {
-        expect(uploadBook('Rust Learning Book', 'Book written for all those people interested in learning the powerfull and reliable Rust Programming Language.','https://ipfs.io/ipfs/bafybeiet7srgvvxkzwrcaayorzmecmirkizmbinwwcn2k7wxpaszvfmzdi', 'https://ipfs.io/ipfs/bafybeia5khhhukn672acm6sfredqdereor7n7zsoobvrwcqk7rmn6ihffi', 'Book Author', 'English', 'Book Publisher')).toStrictEqual(newBook);
+describe("Registrar_Evento", () => {
+    it('should return "Nuevo evento registrado"', () => {
+        expect(Registrar_Evento('1','Concierto', 'Concierto de Rock Pesado.','100', '20/05/2023', '04:20', '50')).toStrictEqual(newEvento);
     })
 })
-
+/*
 describe("getBooks", () => {
     it('should return all books', () => {
         expect(getBooks()).toStrictEqual(data)
@@ -67,4 +67,4 @@ describe("deleteBooks", () => {
         expect(booksLen()).toBe(0, 'books should be deleted!')
     })
 })
-
+*/
